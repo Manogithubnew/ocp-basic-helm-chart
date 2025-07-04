@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: "1.0"
-description: A Helm chart for provisioning K8S resources on OCP
-name: ocp-helm-templetes-ab-test
+description: A Helm chart for provisioning resources on OCP
+name: ocp-helm-chart-ab-test
 version: 0.1.0
 
