@@ -1,0 +1,22 @@
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.istio.app.name }}-vs
+  namespace: {{ .Values.istio.app.namespace }}
+spec:
+  hosts:
+    {{- toYaml .Values.istio.hosts | nindent 4 }}
+  gateways:
+    - {{ .Values.istio.gateway }}
+  http:
+    - route:
+        - destination:
+            host: {{ .Values.istio.app.name }}
+            subset: v1
+          weight: {{ .Values.istio.abTest.weightV1 }}
+        - destination:
+            host: {{ .Values.istio.app.name }}
+            subset: v2
+          weight: {{ .Values.istio.abTest.weightV2 }}
+{{- end }}
