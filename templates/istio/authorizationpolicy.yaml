@@ -1,0 +1,16 @@
+{{- if .Values.istio.authzPolicy.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .Values.istio.authzPolicy.name }}
+  namespace: {{ .Values.istio.authzPolicy.namespace }}
+spec:
+  selector:
+    matchLabels:
+      {{- toYaml .Values.istio.authzPolicy.selector.matchLabels | nindent 6 }}
+  action: {{ .Values.istio.authzPolicy.action }}
+  rules:
+    {{- range .Values.istio.authzPolicy.rules }}
+    - {{- toYaml . | nindent 6 }}
+    {{- end }}
+{{- end }}
