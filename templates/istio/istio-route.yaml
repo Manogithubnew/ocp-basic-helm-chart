@@ -1,0 +1,28 @@
+{{- if .Values.istio.route.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.istio.route.name }}
+  namespace: {{ .Values.istio.route.namespace }}
+spec:
+  hosts:
+    {{- toYaml .Values.istio.route.hosts | nindent 4 }}
+  gateways:
+    - {{ .Values.istio.route.gateway }}
+  http:
+    {{- range $region, $rule := .Values.istio.route.regionRouting }}
+    - match:
+        - headers:
+            x-region:
+              exact: {{ $region }}
+      route:
+        - destination:
+            host: {{ $.Values.istio.route.host }}
+            subset: {{ $rule.subset }}
+    {{- end }}
+    # Fallback route
+    - route:
+        - destination:
+            host: {{ .Values.istio.route.host }}
+            subset: {{ .Values.istio.route.fallback.subset }}
+{{- end }}
